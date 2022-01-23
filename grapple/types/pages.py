@@ -276,7 +276,6 @@ def PagesQuery():
         )
 
         # Return all pages in site, ideally specific.
-
         def resolve_pages(self, info, **kwargs):
             pages = (
                 WagtailPage.objects.live().public().filter(depth__gt=1, url_path__contains=kwargs.get('url_path')).specific()
