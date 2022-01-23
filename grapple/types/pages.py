@@ -234,6 +234,14 @@ def PagesQuery():
                 description=_("Filter to pages in the current site only."),
                 default_value=False,
             ),
+
+            url_path=graphene.Argument(
+                graphene.String,
+                description=_(
+                    "Filter by url path. Note: in a multi-site setup, returns the first available page based. "
+                    "Use `inSite: true` from the relevant site domain."
+                ),
+
             enable_search=True,
             required=True,
         )
@@ -270,7 +278,7 @@ def PagesQuery():
         # Return all pages in site, ideally specific.
         def resolve_pages(self, info, **kwargs):
             pages = (
-                WagtailPage.objects.live().public().filter(depth__gt=1).specific()
+                WagtailPage.objects.live().public().filter(depth__gt=1, url_path__contains=kwargs.get('url_path')).specific()
             )  # no need to the root page
 
             if kwargs.get("in_site", False):
